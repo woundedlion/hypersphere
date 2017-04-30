@@ -23,18 +23,18 @@ namespace Generator
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private LogView logView = new LogView();
-		public LogView LogView { get { return logView; } }
+		public UILogger UILogger { get; } = new UILogger();
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			DataContext = this;
-			logView.Log(LogLevel.INFO, "Initialized");
+			App.Log += UILogger.Log;
+			App.Log(LogLevel.INFO, "Initialized");
 		}
 	}
 
-	public class LogView : ILogger
+	public class UILogger
 	{
 		private ObservableTailDropQueue<LogEntry> entries = new ObservableTailDropQueue<LogEntry>(1000);
 		public ObservableTailDropQueue<LogEntry> Entries { get { return entries; } }

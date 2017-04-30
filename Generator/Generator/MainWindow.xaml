@@ -44,7 +44,7 @@
 				<ColumnDefinition Width="15*"/>
 			</Grid.ColumnDefinitions>
 			<ScrollViewer Grid.Column="0">
-				<ItemsControl ItemsSource="{Binding LogView.Entries}">
+				<ItemsControl ItemsSource="{Binding UILogger.Entries}">
 					<ItemsControl.ItemContainerStyle>
 						<Style>
 							<Style.Triggers>

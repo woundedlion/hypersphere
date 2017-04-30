@@ -13,5 +13,10 @@ namespace Generator
     /// </summary>
     public partial class App : Application
     {
+		public static Log Log = new Log((LogLevel l, string m) => { });
+
+		public App()
+		{
+		}
     }
 }
