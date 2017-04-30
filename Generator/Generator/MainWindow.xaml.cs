@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+
 
 namespace Generator
 {
@@ -21,13 +23,34 @@ namespace Generator
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private LogView logView = new LogView();
+		public LogView LogView { get { return logView; } }
+
 		public MainWindow()
 		{
 			InitializeComponent();
+			DataContext = this;
+			logView.Log(LogLevel.INFO, "Initialized");
 		}
 	}
 
-	public class MaxSquare : IMultiValueConverter
+	public class LogView : ILogger
+	{
+		private ObservableTailDropQueue<LogEntry> entries = new ObservableTailDropQueue<LogEntry>(1000);
+		public ObservableTailDropQueue<LogEntry> Entries { get { return entries; } }
+
+		public void Log(LogLevel level, string message)
+		{
+			LogEntry e = new LogEntry();
+			e.level = level;
+			e.message = message;
+			e.time = DateTime.Now;
+			// Post the entry to the UI thread
+			Application.Current.Dispatcher.BeginInvoke((Action)(() => this.entries.Enqueue(e)));
+		}
+	}
+
+	public class MinConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{

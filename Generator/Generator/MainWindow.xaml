@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="HyperSphere Generator" Height="Auto" Width="Auto" Background="#222222">
 	<Window.Resources>
-		<local:MaxSquare x:Key="MaxSquare" />
+		<local:MinConverter x:Key="Min" />
 	</Window.Resources>
 	<Grid>
         <Grid.ColumnDefinitions/>
@@ -23,13 +23,13 @@
 			<Grid Name="Canvas" Grid.Column="0">
 				<Canvas Background="Black">
 					<Canvas.MaxWidth>
-						<MultiBinding Converter="{StaticResource MaxSquare}">
+						<MultiBinding Converter="{StaticResource Min}">
 							<Binding Path="ActualHeight" ElementName="Canvas"/>
 							<Binding Path="ActualWidth" ElementName="Canvas"/>
 						</MultiBinding>
 					</Canvas.MaxWidth>
 					<Canvas.MaxHeight>
-						<MultiBinding Converter="{StaticResource MaxSquare}">
+						<MultiBinding Converter="{StaticResource Min}">
 							<Binding Path="ActualHeight" ElementName="Canvas"/>
 							<Binding Path="ActualWidth" ElementName="Canvas"/>
 						</MultiBinding>
@@ -43,9 +43,30 @@
 				<ColumnDefinition Width="85*"/>
 				<ColumnDefinition Width="15*"/>
 			</Grid.ColumnDefinitions>
-			<FlowDocumentScrollViewer Grid.Column="0">
-				<FlowDocument FontFamily="Courier" FontSize="12" Background="#000000" Foreground="#00ff00" />
-			</FlowDocumentScrollViewer>
+			<ScrollViewer Grid.Column="0">
+				<ItemsControl ItemsSource="{Binding LogView.Entries}">
+					<ItemsControl.ItemContainerStyle>
+						<Style>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding level}" Value="{x:Static local:LogLevel.DEBUG}">
+									<Setter Property="Control.Foreground" Value="Yellow"/>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding level}" Value="{x:Static local:LogLevel.INFO}">
+									<Setter Property="Control.Foreground" Value="Green"/>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding level}" Value="{x:Static local:LogLevel.ERROR}">
+									<Setter Property="Control.Foreground" Value="Red"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ItemsControl.ItemContainerStyle>
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<VirtualizingStackPanel IsItemsHost="True"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+				</ItemsControl>
+			</ScrollViewer>
 			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="1*"/>
