@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Generator"
         mc:Ignorable="d"
-        Title="HyperSphere Generator" Height="Auto" Width="Auto" Background="#222222">
+        Title="HyperSphere Generator" Height="Auto" Width="Auto" Background="#222222"
+		Closing="Window_Closing">
 	<Window.Resources>
 		<local:MinConverter x:Key="Min" />
 	</Window.Resources>
@@ -43,7 +44,7 @@
 				<ColumnDefinition Width="85*"/>
 				<ColumnDefinition Width="15*"/>
 			</Grid.ColumnDefinitions>
-			<ScrollViewer Grid.Column="0">
+			<ScrollViewer Grid.Column="0" ScrollChanged="ScrollViewer_ScrollChanged">
 				<ItemsControl ItemsSource="{Binding UILogger.Entries}">
 					<ItemsControl.ItemContainerStyle>
 						<Style>

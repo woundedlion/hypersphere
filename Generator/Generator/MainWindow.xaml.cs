@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,6 +24,8 @@ namespace Generator
 	public partial class MainWindow : Window
 	{
 		public UILogger UILogger { get; } = new UILogger();
+		private bool autoScroll = true;
+		private System.Threading.Timer timer;
 
 		public MainWindow()
 		{
@@ -31,6 +33,25 @@ namespace Generator
 			DataContext = this;
 			App.Log += UILogger.Log;
 			App.Log(LogLevel.INFO, "Initialized");
+			timer = new Timer(x => App.Log(LogLevel.DEBUG, "xxxxx"), null, 0, 10);
+		}
+
+		private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+		{
+			if (e.ExtentHeightChange == 0)
+			{
+				autoScroll = (e.Source as ScrollViewer).VerticalOffset == (e.Source as ScrollViewer).ScrollableHeight;
+			}
+
+			if (autoScroll && e.ExtentHeightChange != 0)
+			{
+				(e.Source as ScrollViewer).ScrollToVerticalOffset((e.Source as ScrollViewer).ExtentHeight);
+			}
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 	}
 
